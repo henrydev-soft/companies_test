@@ -17,12 +17,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from rest_framework.routers import DefaultRouter
+
+# Routers for API version 1
+from companies.urls.v1 import router_v1_companies
+from products.urls.v1 import router_v1_products
+
+# Create a default router for API version 1
+router_v1 = DefaultRouter()
+router_v1.registry.extend(router_v1_companies.registry)
+router_v1.registry.extend(router_v1_products.registry)
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # --- API Version 1 ---
-    path('api/v1/companies/', include('companies.urls.v1', namespace='companies-v1')),
-    path('api/v1/products/', include('products.urls.v1', namespace='products-v1')),
+    path('api/v1/', include(router_v1.urls)),
 
     # --- Redirecciones Opcionales para la Versión por Defecto ---
     path('api/', lambda request: redirect('/api/v1/')),
