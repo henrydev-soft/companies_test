@@ -36,6 +36,7 @@ ALLOWED_HOSTS = []
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -52,7 +53,8 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'companies',
-    'products'
+    'products',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -119,6 +121,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
 #Django Rest Framework Configuration
 # https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
@@ -133,7 +137,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', # Change to IsAuthenticated when needed
+        'rest_framework.permissions.IsAuthenticated', # Change to IsAuthenticated when needed
     ],
 }
 
