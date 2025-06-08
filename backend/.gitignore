@@ -1,0 +1,52 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+env/
+venv/
+ENV/
+.venv/
+env.bak/
+env_old/
+
+# Django files
+*.sqlite3
+*.log
+*.pot
+*.pyc
+
+# Migrations (optional: keep if you want them in VCS)
+**/migrations/*.pyc
+**/migrations/__pycache__/
+# Uncomment below line to ignore migrations completely (not recommended for teams)
+# **/migrations/*.py
+
+# Media and static files (optional)
+media/
+staticfiles/
+static_root/
+static/
+
+# Secret files
+.env
+.env.*
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+.cache
+pytest_cache/
+
+# Jupyter notebooks
+.ipynb_checkpoints
+
+# VS Code devcontainer
+.devcontainer/
