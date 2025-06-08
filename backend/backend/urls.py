@@ -20,9 +20,9 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # URL for APIS v1
-    path('api/v1', include('companies.urls.v1', namespace='v1')),
-    path('api/v1', include('products.urls.v1', namespace='v1')),
+    # --- API Version 1 ---
+    path('api/v1/companies/', include('companies.urls.v1', namespace='companies-v1')),
+    path('api/v1/products/', include('products.urls.v1', namespace='products-v1')),
 
     # --- Redirecciones Opcionales para la Versión por Defecto ---
     path('api/', lambda request: redirect('/api/v1/')),
