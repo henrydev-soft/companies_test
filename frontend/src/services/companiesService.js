@@ -76,3 +76,50 @@ export const deleteCompany = async (nit) => {
         throw error;
     }
 };
+
+// Nueva función para descargar el PDF del inventario
+export const downloadInventoryPdf = async (companyNit) => {
+    try {
+        // La instancia 'api' de Axios ya debería manejar la adición del token de autenticación
+        // gracias a tus interceptores configurados en AuthContext y api.js.
+        const response = await api.get(`${COMPANIES_PUBLIC_URL}${companyNit}/pdf/`, {
+            responseType: 'blob', // MUY IMPORTANTE: Indicar a Axios que esperamos un blob (archivo)
+        });
+        return response.data; // Retorna el blob de datos del PDF
+    } catch (error) {
+        // Axios errores ya vienen con la respuesta del servidor en error.response
+        if (error.response) {
+            // Intentar leer el mensaje de error del backend si no es un blob
+            const contentType = error.response.headers['content-type'];
+            if (contentType && contentType.includes("application/json")) {
+                const errorData = await new Response(error.response.data).json(); // Convertir blob de error a JSON
+                throw new Error(errorData.detail || errorData.error || `Error ${error.response.status}: Error del servidor.`);
+            } else {
+                 throw new Error(`Error ${error.response.status}: La solicitud falló. ` + (error.response.status === 401 ? 'No autorizado.' : ''));
+            }
+        } else if (error.request) {
+            throw new Error("No se recibió respuesta del servidor. Verifica tu conexión.");
+        } else {
+            throw new Error("Error en la configuración de la solicitud: " + error.message);
+        }
+    }
+};
+
+// Nueva función para enviar el PDF del inventario por correo
+export const sendInventoryPdfByEmail = async (companyNit, emailTo) => {
+    try {
+        const response = await api.post(`${COMPANIES_PUBLIC_URL}${companyNit}/send_pdf_email/`, {
+            email_to: emailTo,
+        });
+        return response.data; // Devuelve el mensaje de éxito del backend
+    } catch (error) {
+        if (error.response) {
+            // Intentar leer el mensaje de error del backend
+            throw new Error(error.response.data.detail || error.response.data.error || `Error ${error.response.status}: Error al enviar el correo.`);
+        } else if (error.request) {
+            throw new Error("No se recibió respuesta del servidor al intentar enviar el correo.");
+        } else {
+            throw new Error("Error en la configuración de la solicitud para enviar el correo: " + error.message);
+        }
+    }
+};

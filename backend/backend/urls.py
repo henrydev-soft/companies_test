@@ -18,13 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
-
 
 # Routers for API version 1
 from companies.urls.v1 import router_v1_companies
 from products.urls.v1 import router_v1_products
+
+# Generacion de PDF
+from companies.views.v1 import generate_inventory_pdf
 
 # Create a default router for API version 1
 router_v1 = DefaultRouter()
@@ -40,6 +40,9 @@ urlpatterns = [
 
     # --- JWT Authentication y Registro ---
     path('api/v1/users/', include('users.urls.v1')),
+
+    # --- Generación de PDF ---
+    path('api/v1/companies/<str:nit>/pdf/', generate_inventory_pdf, name='generate_inventory_pdf'),
 
     # --- Redirecciones Opcionales para la Versión por Defecto ---
     path('api/', lambda request: redirect('/api/v1/')),

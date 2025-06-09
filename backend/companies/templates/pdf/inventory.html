@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #444;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Inventario de {{ empresa.name }}</h1>
+  <p><strong>NIT:</strong> {{ empresa.nit }}</p>
+  <p><strong>Dirección:</strong> {{ empresa.address }}</p>
+  <p><strong>Teléfono:</strong> {{ empresa.phone }}</p>
+
+  <h2>Productos y precios</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Características</th>
+        <th>Precios</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in productos_con_precios %}
+      <tr>
+        <td>{{ item.producto.code }}</td>
+        <td>{{ item.producto.name }}</td>
+        <td>{{ item.producto.characteristics }}</td>
+        <td>
+          <ul style="margin: 0; padding-left: 1em;">
+            {% for precio in item.precios %}
+            <li>{{ precio.currency.symbol }} {{ precio.price }} ({{ precio.currency.iso_code }})</li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+
+</html>
