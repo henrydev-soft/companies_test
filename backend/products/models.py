@@ -1,5 +1,6 @@
 from django.db import models
 from companies.models import Company
+from django.conf import settings
 
 # Products models module.
 class Product(models.Model):
@@ -7,7 +8,8 @@ class Product(models.Model):
     name = models.CharField(max_length=256)
     characteristics = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_products') 
 
     def __str__(self):
         return f"{self.name} (Code: {self.code})"

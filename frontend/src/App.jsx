@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
+import InventoryView from './pages/InventoryView';
 import CompaniesPage from './pages/CompaniesPage';
 import MyCompaniesPage from './pages/MyCompaniesPage';
 import MyProductsPage from './pages/MyProductsPage';
@@ -24,9 +25,11 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
+          {/* Rutas públicas */}
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/companies" element={<CompaniesPage />} />
-          <Route path="/" element={<HomePage />} />
+          <Route path="/inventory/:companyNit" element={<InventoryView />} />          
 
           {/* Rutas protegidas */}          
           <Route path="/my-companies" element={<PrivateRoute><MyCompaniesPage /></PrivateRoute>} />

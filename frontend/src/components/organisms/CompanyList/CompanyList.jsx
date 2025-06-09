@@ -1,6 +1,6 @@
 
+import Spinner from '../../atoms/Spinner/Spinner';
 import CompanyListItem from '../../molecules/CompanyListItem/CompanyListItem';
-import Spinner from '../../molecules/Spinner/Spinner';
 import EmptyState from '../EmptyState/EmptyState';
 
 const CompanyList = ({ companies, isLoading, error }) => {

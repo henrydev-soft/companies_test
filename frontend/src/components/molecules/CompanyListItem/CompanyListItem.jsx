@@ -1,3 +1,4 @@
+import TextLink from '../../atoms/TextLink/TextLink';
 
 const CompanyListItem = ({ company }) => {
   return (
@@ -6,8 +7,7 @@ const CompanyListItem = ({ company }) => {
       <p className="text-gray-600 text-sm mt-1">NIT: {company.nit}</p>
       <p className="text-gray-600 text-sm">Dirección: {company.address}</p>
       <p className="text-gray-600 text-sm">Teléfono: {company.phone}</p>
-      {/* Si tuviera una vista de detalle para la empresa, podrías añadir un TextLink aquí */}
-      {/* <TextLink to={`/companies/${company.id}`} className="mt-2 inline-block">Ver detalles</TextLink> */}
+      <TextLink to={`/inventory/${company.nit}`} className="mt-2 inline-block">Ver detalles</TextLink>
     </div>
   );
 };

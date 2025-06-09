@@ -90,7 +90,7 @@ const MyCompaniesPage = () => {
   };
 
   const openCreateModal = () => {
-    setEditingCompany(null); // Asegurarse de que no estamos editando
+    setEditingCompany(null);
     setIsModalOpen(true);
   };
 

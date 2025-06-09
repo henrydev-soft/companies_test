@@ -24,6 +24,17 @@ export const getMyCompanies = async () => {
     }
 };
 
+export const getCompanyByNit = async (nit) => {
+  try {
+    const response = await api.get(`${COMPANIES_PUBLIC_URL}${nit}/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching company with NIT ${nit}:`, error);
+    throw error;
+  }
+};
+
+
 //Crear Empresa
 export const createCompany = async (companyData) => {
     try {

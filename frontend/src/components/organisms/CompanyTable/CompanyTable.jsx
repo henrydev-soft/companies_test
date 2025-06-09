@@ -1,6 +1,6 @@
 import TableHeader from '../../atoms/TableHeader/TableHeader';
+import Spinner from '../../atoms/Spinner/Spinner';
 import TableRow from '../../molecules/TableRow/TableRow';
-import Spinner from '../../molecules/Spinner/Spinner';
 import EmptyState from '../../organisms/EmptyState/EmptyState'; // Reutiliza EmptyState
 
 const CompanyTable = ({ companies, isLoading, error, onEdit, onDelete }) => {
