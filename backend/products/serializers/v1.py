@@ -51,6 +51,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'company_name',
             'company_nit',
             'created_by',
+            'generated_add',
             'prices'
         ]
         read_only_fields = ['created_at', 'created_by', 'company_name', 'company_nit']

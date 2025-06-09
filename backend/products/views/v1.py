@@ -1,12 +1,14 @@
-from rest_framework import viewsets, filters, permissions
+from rest_framework import viewsets, filters, permissions, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
 
+
 from ..models import Product, Currency, ProductCurrencyPrice
 from companies.models import Company
+from ..ai.text_generator import generate_ad_text
 from ..permissions.v1 import IsProductCreatorOrReadOnly, IsProductOwnerForWrite
 from ..serializers.v1 import (
     ProductSerializer,
@@ -105,7 +107,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def my_products(self, request):
         user = request.user
-        queryset = self.get_queryset().filter(created_by=user)
+        queryset = self.get_queryset().filter(created_by=user).order_by('-created_at')
         # Aplica paginación si está configurada
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -115,6 +117,19 @@ class ProductViewSet(viewsets.ModelViewSet):
         # Si no hay paginación configurada, se comporta como lista normal
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'], url_path='generate_post')
+    def generate_post(self, request, pk=None):
+        try:
+            product = self.get_object()
+            generated = generate_ad_text(product.name, product.characteristics)
+            print(generated)
+            print(product.name, product.characteristics)
+            product.generated_add = generated
+            product.save()
+            return Response({'generated_add': generated}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
@@ -132,3 +147,4 @@ class ProductCurrencyPriceViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['product__code', 'currency__iso_code']
     permission_classes = [IsProductOwnerForWrite]
+

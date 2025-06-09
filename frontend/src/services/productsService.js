@@ -2,7 +2,6 @@
 import api from './api';
 
 const PRODUCTS_URL = '/api/v1/products/';
-const PRICES_URL = '/api/v1/prices/';
 
 export const getMyProducts = async () => {
     try {
@@ -47,5 +46,23 @@ export const deleteProduct = async (code) => {
         return response.status === 204;
     } catch (error) {
         throw error;
+    }
+};
+
+
+// Nueva función para generar el post de publicidad
+export const generateProductAd = async (productCode) => {
+    try {
+        const response = await api.post(`${PRODUCTS_URL}${productCode}/generate_post/`);
+        return response.data; // Esperamos { "generated_ad": "..." }
+    } catch (error) {
+        if (error.response) {
+            // El backend puede enviar un mensaje de error específico
+            throw new Error(error.response.data.detail || error.response.data.error || `Error ${error.response.status}: No se pudo generar la publicidad.`);
+        } else if (error.request) {
+            throw new Error("No se recibió respuesta del servidor al intentar generar la publicidad.");
+        } else {
+            throw new Error("Error en la configuración de la solicitud para generar la publicidad: " + error.message);
+        }
     }
 };

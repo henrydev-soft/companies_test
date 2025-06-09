@@ -10,6 +10,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_products') 
+    generated_add = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} (Code: {self.code})"

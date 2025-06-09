@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import GeneralPageTemplate from '../templates/GeneralPageTemplate/GeneralPageTemplate';
 import SectionTitle from '../components/organisms/SectionTitle/SectionTitle';
@@ -8,6 +7,7 @@ import Modal from '../components/organisms/Modal/Modal';
 import ConfirmationDialog from '../components/molecules/ConfirmationDialog/ConfirmationDialog';
 import Button from '../components/atoms/Button/Button';
 import { getMyProducts, createProduct, updateProduct, deleteProduct } from '../services/productsService';
+import AdModal from '../components/organisms/AdModal/AdModal';
 
 const MyProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -17,6 +17,8 @@ const MyProductsPage = () => {
   const [editingProduct, setEditingProduct] = useState(null); // Para editar
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [selectedProductForAd, setSelectedProductForAd] = useState(null);
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -92,6 +94,24 @@ const MyProductsPage = () => {
     setIsModalOpen(true);
   };
 
+  const handleGenerateAdClick = (product) => {
+    setSelectedProductForAd(product);
+    setIsAdModalOpen(true);
+  };
+
+  const handleAdGenerated = (productId, newAdContent) => {
+    // Actualiza el estado de los productos con el nuevo texto generado
+    setProducts(prevProducts =>
+      prevProducts.map(p =>
+        p.id === productId ? { ...p, generated_ad: newAdContent } : p
+      )
+    );
+    // También actualiza el producto seleccionado si es el mismo, para que el modal refleje el cambio
+    setSelectedProductForAd(prevProduct =>
+      prevProduct && prevProduct.id === productId ? { ...prevProduct, generated_ad: newAdContent } : prevProduct
+    );
+  };
+
   return (
     <GeneralPageTemplate title="Mis Productos">
       <SectionTitle title="Gestiona tus Productos" />
@@ -108,6 +128,7 @@ const MyProductsPage = () => {
         error={error}
         onEdit={openEditModal}
         onDelete={handleDeleteProduct}
+        onGenerateAdClick={handleGenerateAdClick}
       />
 
       <Modal
@@ -129,6 +150,18 @@ const MyProductsPage = () => {
         title="Confirmar Eliminación"
         message={`¿Estás seguro de que quieres eliminar el producto "${productToDelete?.name}" con código "${productToDelete?.code}"? Esta acción no se puede deshacer.`}
       />
+      {selectedProductForAd && ( // Solo renderiza si hay un producto seleccionado
+        <AdModal
+          isOpen={isAdModalOpen}
+          onClose={() => {
+            setIsAdModalOpen(false);
+            setSelectedProductForAd(null); // Limpiar el producto seleccionado al cerrar
+          }}
+          product={selectedProductForAd}
+          initialAd={selectedProductForAd.generated_add} // Pasa el texto actual del producto
+          onAdGenerated={handleAdGenerated} // Callback para actualizar el texto en la tabla
+        />
+      )}
     </GeneralPageTemplate>
   );
 };

@@ -3,8 +3,10 @@ import TableCell from '../../atoms/TableCell/TableCell';
 import IconButton from '../../atoms/IconButton/IconButton';
 import Spinner from '../../atoms/Spinner/Spinner';
 import EmptyState from '../../organisms/EmptyState/EmptyState';
+import AdIcon from '../../atoms/AdIcon/AdIcon';
 
 
+//Esto debería convertirse en componentes reutilizables a futuro. 
 const EditIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
@@ -17,8 +19,9 @@ const DeleteIcon = () => (
   </svg>
 );
 
-// Añadimos la prop `showActions` con valor por defecto `true`
-const ProductTable = ({ products, isLoading, error, onEdit, onDelete, showActions = true }) => {
+
+// Componente ProductTable que muestra una tabla de productos con opciones de edición y eliminación
+const ProductTable = ({ products, isLoading, error, onEdit, onDelete, showActions = true, onGenerateAdClick }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-48">
@@ -54,6 +57,10 @@ const ProductTable = ({ products, isLoading, error, onEdit, onDelete, showAction
             <TableHeader>Precios</TableHeader>
             {/* Solo muestra la columna "Acciones" si showActions es true */}
             {showActions && <TableHeader className="text-center">Acciones</TableHeader>}
+            {/* Solo renderiza este TableHeader si la prop onGenerateAdClick está presente */}
+            {onGenerateAdClick && (
+                            <TableHeader className="text-center">Publicidad IA</TableHeader>
+                        )}
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -86,6 +93,21 @@ const ProductTable = ({ products, isLoading, error, onEdit, onDelete, showAction
                     </IconButton>
                     <IconButton onClick={() => onDelete(product)} title="Eliminar Producto">
                       <DeleteIcon />
+                    </IconButton>
+                  </div>
+                </TableCell>
+              )}
+              {/* Celda para el botón de Publicidad IA */}
+              {/* Solo renderiza si la prop onGenerateAdClick está presente */}
+              {onGenerateAdClick && (
+                <TableCell>
+                  <div className="flex items-center justify-center"> {/* Centrar el icono */}
+                    <IconButton
+                      onClick={() => onGenerateAdClick(product)} // Llama a la función con el producto completo
+                      title="Generar/Ver Publicidad"
+                      className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-2 rounded-lg"
+                    >
+                      <AdIcon />
                     </IconButton>
                   </div>
                 </TableCell>
